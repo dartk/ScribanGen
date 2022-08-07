@@ -5,19 +5,18 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>10</LangVersion>
-        <RootNamespace>ScribanGenerator</RootNamespace>
+        <RootNamespace>ScribanCSharpGenerator</RootNamespace>
         <Authors>Dmitry Artemkin</Authors>
         <Copyright>2022</Copyright>
         <PackageVersion>0.1.0</PackageVersion>
-        <Title>CSharpScribanGenerator</Title>
-        <RepositoryUrl>https://github.com/dartk/CSharpScribanGenerator</RepositoryUrl>
+        <Title>ScribanCSharpGenerator</Title>
         <Description>C# source generator that renders Scriban scripts</Description>
-        <PackageProjectUrl>https://github.com/dartk/CSharpScribanGenerator</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/dartk/ScribanCSharpGenerator</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/dartk/ScribanCSharpGenerator</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <PropertyGroup>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <NoWarn>1701;1702;NU5128</NoWarn>
     </PropertyGroup>
