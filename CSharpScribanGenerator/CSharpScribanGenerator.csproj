@@ -6,7 +6,27 @@
         <Nullable>enable</Nullable>
         <LangVersion>10</LangVersion>
         <RootNamespace>ScribanGenerator</RootNamespace>
+        <Authors>Dmitry Artemkin</Authors>
+        <Copyright>2022</Copyright>
+        <PackageVersion>0.1.0</PackageVersion>
+        <Title>CSharpScribanGenerator</Title>
+        <RepositoryUrl>https://github.com/dartk/CSharpScribanGenerator</RepositoryUrl>
+        <Description>C# source generator that renders Scriban scripts</Description>
+        <PackageProjectUrl>https://github.com/dartk/CSharpScribanGenerator</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <NoWarn>1701;1702;NU5128</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Package the generator in the analyzer directory of the nuget package -->
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        <None Include="$(PkgScriban)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
