@@ -1,0 +1,7 @@
+{{- include '_Include.scriban' -}}
+
+public static class ClassFromScriban {
+    {{ for i in 0..CountFromIncludedFile }}
+    public static readonly int Value{{ i }} = {{ i }};
+    {{ end }}
+}
