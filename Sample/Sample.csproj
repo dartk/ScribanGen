@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Scriban\*" />
+        <AdditionalFiles Include="ScribanTemplates\*" />
     </ItemGroup>
 
     <PropertyGroup>

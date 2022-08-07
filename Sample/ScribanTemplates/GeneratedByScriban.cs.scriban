@@ -1,0 +1,5 @@
+{{- include '_Global.scriban' -}}
+
+public static class GeneratedByScriban {
+    public static readonly int GlobalValue = {{ GlobalValue }};
+}
