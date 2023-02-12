@@ -5,16 +5,25 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>10</LangVersion>
-        <RootNamespace>ScribanCSharpGenerator</RootNamespace>
         <Authors>Dmitry Artemkin</Authors>
         <Copyright>2022</Copyright>
-        <PackageVersion>0.1.0</PackageVersion>
-        <Title>ScribanCSharpGenerator</Title>
-        <Description>C# source generator that renders Scriban scripts</Description>
-        <RepositoryUrl>https://github.com/dartk/ScribanCSharpGenerator</RepositoryUrl>
-        <PackageProjectUrl>https://github.com/dartk/ScribanCSharpGenerator</PackageProjectUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageVersion>0.1.0-alpha1</PackageVersion>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageId>Dartk.CSharp.SourceGen.Scriban</PackageId>
+        <Title>CSharp.SourceGen.Scriban</Title>
+        <Description>C# source generator that renders Scriban templates</Description>
+        <RepositoryUrl>https://github.com/dartk/csharp-sourcegen-scriban</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/dartk/csharp-sourcegen-scriban</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="./../README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
 
     <PropertyGroup>
         <IncludeBuildOutput>false</IncludeBuildOutput>

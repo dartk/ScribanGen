@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 
 
-namespace ScribanCSharpGenerator;
+namespace CSharp.SourceGen.Scriban;
 
 
 [Generator]

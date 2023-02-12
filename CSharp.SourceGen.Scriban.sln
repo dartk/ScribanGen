@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScribanCSharpGenerator", "ScribanCSharpGenerator\ScribanCSharpGenerator.csproj", "{32619351-847E-406C-9E7A-51F975CDC571}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp.SourceGen.Scriban", "CSharp.SourceGen.Scriban\CSharp.SourceGen.Scriban.csproj", "{32619351-847E-406C-9E7A-51F975CDC571}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{86DE033A-6070-4A99-8521-29B959BC824D}"
 EndProject

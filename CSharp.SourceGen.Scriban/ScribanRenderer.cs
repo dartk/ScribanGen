@@ -3,7 +3,7 @@ using Scriban.Parsing;
 using Scriban.Runtime;
 
 
-namespace ScribanCSharpGenerator;
+namespace CSharp.SourceGen.Scriban;
 
 
 public class ScribanRenderer {
