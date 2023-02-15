@@ -18,6 +18,7 @@
         <PackageProjectUrl>https://github.com/dartk/csharp-sourcegen-scriban</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>C# scriban liquid templating code generation</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
