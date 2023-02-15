@@ -1,0 +1,6 @@
+{{
+# File name starts with an underscore, therefore will not be rendered.
+# But it can be included in other templates.
+
+numbers = [ "one", "two", "three" ]
+}}

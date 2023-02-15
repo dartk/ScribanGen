@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp.SourceGen.Scriban", "CSharp.SourceGen.Scriban\CSharp.SourceGen.Scriban.csproj", "{32619351-847E-406C-9E7A-51F975CDC571}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{86DE033A-6070-4A99-8521-29B959BC824D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.SourceGen.Scriban.Tests", "CSharp.SourceGen.Scriban.Tests\CSharp.SourceGen.Scriban.Tests.csproj", "{7DC971F5-EF87-4773-A774-96EDC6925772}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{32619351-847E-406C-9E7A-51F975CDC571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32619351-847E-406C-9E7A-51F975CDC571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32619351-847E-406C-9E7A-51F975CDC571}.Release|Any CPU.Build.0 = Release|Any CPU
-		{86DE033A-6070-4A99-8521-29B959BC824D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86DE033A-6070-4A99-8521-29B959BC824D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86DE033A-6070-4A99-8521-29B959BC824D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86DE033A-6070-4A99-8521-29B959BC824D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DC971F5-EF87-4773-A774-96EDC6925772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DC971F5-EF87-4773-A774-96EDC6925772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DC971F5-EF87-4773-A774-96EDC6925772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DC971F5-EF87-4773-A774-96EDC6925772}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
