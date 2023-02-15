@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>11</LangVersion>
         <Authors>Dmitry Artemkin</Authors>
-        <Copyright>2022</Copyright>
+        <Copyright>2023</Copyright>
         <PackageVersion>0.1.0</PackageVersion>
     </PropertyGroup>
 
