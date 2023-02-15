@@ -7,7 +7,7 @@
         <LangVersion>10</LangVersion>
         <Authors>Dmitry Artemkin</Authors>
         <Copyright>2022</Copyright>
-        <PackageVersion>0.1.0-alpha1</PackageVersion>
+        <PackageVersion>0.1.0</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -15,6 +15,7 @@
         <Title>CSharp.SourceGen.Scriban</Title>
         <Description>C# source generator that renders Scriban templates</Description>
         <RepositoryUrl>https://github.com/dartk/csharp-sourcegen-scriban</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/dartk/csharp-sourcegen-scriban</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
