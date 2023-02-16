@@ -28,11 +28,7 @@ To avoid propagating dependency on the package set the option `PrivateAssets="al
 
 ## Source generation
 
-Include scriban template files with `.scriban` extension to the project as `AdditionalFiles`.
-
-> **Warning**: If a `.scriban` file's name starts with an underscore '_', then it will not be rendered. But it can be included in other templates using the [`include`](https://github.com/scriban/scriban/blob/master/doc/language.md#911-include-name-arg1argn) statement.
-
-For example, to render all scriban templates in the `ScribanTemplates` folder add this to the project file:
+Include scriban template files with `.scriban` extension to the project as `AdditionalFiles`. For example, to render all scriban templates in the `ScribanTemplates` folder add this to the project file:
 
 ```xml
 <ItemGroup>
@@ -41,6 +37,10 @@ For example, to render all scriban templates in the `ScribanTemplates` folder ad
 ```
 
 A [complete example](#example) is presented below.
+
+If a `.scriban` file's name starts with an underscore '_', then it will not be rendered. But it can be included in other templates using the [`include`](https://github.com/scriban/scriban/blob/master/doc/language.md#911-include-name-arg1argn) statement.
+
+> **Warning**: Microsoft Visual Studio 22 (tested on version 17.4.3 on Windows OS) will call a source generator on every edit of the files that are being cached by the generator. Thus, every character insertion or deletion in a `.scriban` template will cause the template rendering. Therefore, edit those files in an external editor for better performance. JetBrains Rider does not have this issue, it will invoke source generators only when changes to the cached files are saved.
 
 
 ## Saving generated files
