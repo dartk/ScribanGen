@@ -20,7 +20,7 @@ To avoid propagating dependency on the package set the option `PrivateAssets="al
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="Dartk.CSharp.SourceGen.Scriban" Version="0.3.0" PrivateAssets="All" />
+    <PackageReference Include="Dartk.CSharp.SourceGen.Scriban" Version="0.3.1" PrivateAssets="All" />
 </ItemGroup>
 ```
 
