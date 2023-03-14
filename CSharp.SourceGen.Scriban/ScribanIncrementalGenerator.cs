@@ -52,6 +52,8 @@ public class ScribanIncrementalGenerator : IIncrementalGenerator
         var source = renderer.Render(template, context.ReportDiagnostic);
 
         if (token.IsCancellationRequested) return;
-        context.AddSource(template.FileName() + ".out", source);
+
+        var generatedFileName = Path.GetFileNameWithoutExtension(template.FilePath);
+        context.AddSource(generatedFileName + ".g.cs", source);
     }
 }
