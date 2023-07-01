@@ -1,4 +1,4 @@
-# CSharp.SourceGen.Scriban
+# ScribanGen
 
 A C# source generator that renders [Scriban](https://github.com/scriban/scriban) templates.
 
@@ -7,20 +7,19 @@ A C# source generator that renders [Scriban](https://github.com/scriban/scriban)
 - [Saving generated files](#saving-generated-files)
 - [Limitations](#limitations)
 - [Example](#example)
-- [See also](#see-also)
 
 
 ## Installation
 
 ```text
-dotnet add package Dartk.CSharp.SourceGen.Scriban
+dotnet add package Dartk.ScribanGen
 ```
 
 To avoid propagating dependency on the package set the option `PrivateAssets="all"` in the project file:
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="Dartk.CSharp.SourceGen.Scriban" Version="0.3.1" PrivateAssets="All" />
+    <PackageReference Include="Dartk.ScribanGen" Version="0.3.1" PrivateAssets="All" />
 </ItemGroup>
 ```
 
@@ -70,11 +69,11 @@ Create a new console C# project:
 dotnet new console Example
 ```
 
-Install the package `Dartk.CSharp.SourceGen.Scriban` and set the property `PrivateAssets="All"` by editing the project file *Example.csproj*:
+Install the package `Dartk.ScribanGen` and set the property `PrivateAssets="All"` by editing the project file *Example.csproj*:
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="Dartk.CSharp.SourceGen.Scriban" Version="0.3.0" PrivateAssets="All"/>
+    <PackageReference Include="Dartk.ScribanGen" Version="0.3.2" PrivateAssets="All"/>
 </ItemGroup>
 ```
 
@@ -148,11 +147,3 @@ Number { Int = 1, String = one }
 Number { Int = 2, String = two }
 Number { Int = 3, String = three }
 ```
-
-
-## See also
-
-* [Scriban](https://github.com/scriban/scriban) - A fast, powerful, safe and lightweight scripting language and engine for .NET
-* [CSharp.SourceGen.Csx](https://github.com/dartk/csharp-sourcegen-csx) - Generate C# code from C# scripts
-* [CSharp.SourceGen.Fsx](https://github.com/dartk/csharp-sourcegen-fsx) - Generate C# code from F# scripts
-* [CSharp.SourceGen.Examples](https://github.com/dartk/csharp-sourcegen-examples) - Examples that demonstrate how to use `CSharp.SourceGen.*` code generators

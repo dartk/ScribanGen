@@ -1,4 +1,4 @@
-namespace CSharp.SourceGen.Scriban;
+namespace ScribanGen;
 
 
 public readonly record struct ScribanFile(string FilePath, string Text)

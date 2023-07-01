@@ -5,21 +5,22 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>11</LangVersion>
+        <RootNamespace>ScribanGen</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup>
-        <PackageId>Dartk.CSharp.SourceGen.Scriban</PackageId>
-        <Title>CSharp.SourceGen.Scriban</Title>
+        <PackageId>Dartk.ScribanGen</PackageId>
+        <Title>ScribanGen</Title>
         <Authors>Dmitry Artemkin</Authors>
         <Copyright>2023</Copyright>
         <Description>Generate C# code from Scriban templates</Description>
-        <PackageProjectUrl>https://github.com/dartk/csharp-sourcegen-scriban</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/dartk/csharp-sourcegen-scriban</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/dartk/ScribanGen</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/dartk/ScribanGen</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>C# scriban liquid templating code generation</PackageTags>
-        <PackageVersion>0.3.1</PackageVersion>
+        <PackageVersion>0.3.2-rc01</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

@@ -4,7 +4,6 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
@@ -22,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\CSharp.SourceGen.Scriban\CSharp.SourceGen.Scriban.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\ScribanGen\ScribanGen.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
     <ItemGroup>

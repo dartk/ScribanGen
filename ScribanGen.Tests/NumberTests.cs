@@ -1,7 +1,7 @@
 using Generated;
 
 
-namespace CSharp.SourceGen.Scriban.Tests;
+namespace ScribanGen.Tests;
 
 
 public class NumberTests
