@@ -19,7 +19,7 @@ To avoid propagating dependency on the package set the option `PrivateAssets="al
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="Dartk.ScribanGen" Version="0.3.1" PrivateAssets="All" />
+    <PackageReference Include="Dartk.ScribanGen" Version="0.3.2" PrivateAssets="All" />
 </ItemGroup>
 ```
 
