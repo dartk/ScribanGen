@@ -19,12 +19,14 @@
         <RepositoryType>git</RepositoryType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>icon.png</PackageIcon>
         <PackageTags>C# scriban liquid templating code generation</PackageTags>
         <PackageVersion>0.3.2-rc01</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="./../README.md" Pack="true" PackagePath="/" />
+        <None Include="./../icon.png" Pack="true" PackagePath="/" Visible="false"/>
     </ItemGroup>
 
 
