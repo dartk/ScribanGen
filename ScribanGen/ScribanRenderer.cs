@@ -49,7 +49,7 @@ public class ScribanRenderer
         catch (ScriptRuntimeException ex)
         {
             var scribanSpan = ex.Span;
-            var location = ToLocation(scribanFile.FilePath, scribanSpan);
+            var location = ToLocation(scribanFile.FilePath, scribanSpan, scribanFile.LineOffset);
             var diagnostic = Diagnostic.Create(RenderingError, location, ex.OriginalMessage);
             reportDiagnostic(diagnostic);
 
@@ -126,19 +126,20 @@ public class ScribanRenderer
     }
 
 
-    private static Location ToLocation(string fileName, SourceSpan scribanSpan)
+    private static Location ToLocation(string fileName, SourceSpan scribanSpan,
+        int lineOffset = 0)
     {
         var textSpan = TextSpan.FromBounds(
             scribanSpan.Start.Offset,
             scribanSpan.End.Offset);
 
         var linePositionSpan = new LinePositionSpan(
-            ScribanTextPositionToLinePosition(scribanSpan.Start),
-            ScribanTextPositionToLinePosition(scribanSpan.End));
+            ScribanTextPositionToLinePosition(scribanSpan.Start, lineOffset),
+            ScribanTextPositionToLinePosition(scribanSpan.End, lineOffset));
         return Location.Create(fileName, textSpan, linePositionSpan);
     }
 
 
-    private static LinePosition ScribanTextPositionToLinePosition(TextPosition textPosition) =>
-        new(textPosition.Line, textPosition.Column);
+    private static LinePosition ScribanTextPositionToLinePosition(TextPosition textPosition,
+        int lineOffset) => new(textPosition.Line + lineOffset, textPosition.Column);
 }
