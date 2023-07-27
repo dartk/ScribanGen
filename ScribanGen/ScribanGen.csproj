@@ -26,7 +26,8 @@
 
     <ItemGroup>
         <None Include="./../README.md" Pack="true" PackagePath="/" />
-        <None Include="./../icon.png" Pack="true" PackagePath="/" Visible="false"/>
+        <None Include="./../icon.png" Pack="true" PackagePath="/" Visible="false" />
+        <None Include="ScribanGen.props" Pack="true" PackagePath="build/Dartk.ScribanGen.props" />
     </ItemGroup>
 
 

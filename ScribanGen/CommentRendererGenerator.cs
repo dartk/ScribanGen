@@ -17,7 +17,9 @@ public class CommentRendererGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var provider = context.SyntaxProvider.CreateSyntaxProvider(
+        var formatCodeProvider = context.FormatCodeProvider();
+
+        var triviaProvider = context.SyntaxProvider.CreateSyntaxProvider(
                 predicate: static (node, _) => node.IsKind(SyntaxKind.CompilationUnit),
                 transform: static (context, _) =>
                 {
@@ -32,8 +34,9 @@ public class CommentRendererGenerator : IIncrementalGenerator
                 })
             .Where(static array => !array.IsEmpty);
 
-        context.RegisterSourceOutput(provider, static (context, triviaArray) =>
+        context.RegisterSourceOutput(triviaProvider.Combine(formatCodeProvider), static (context, arg) =>
         {
+            var (triviaArray, formatCode) = arg;
             var token = context.CancellationToken;
 
             var changes = new List<TextChange>();
@@ -56,9 +59,19 @@ public class CommentRendererGenerator : IIncrementalGenerator
             }
 
             token.ThrowIfCancellationRequested();
-            var newSource = source.WithChanges(changes);
+            var renderedSource = source.WithChanges(changes);
             var fileName = Path.GetFileNameWithoutExtension(filePath) + ".g.cs";
-            context.AddSource(fileName, newSource);
+
+            if (formatCode)
+            {
+                var renderedTree = CSharpSyntaxTree.ParseText(renderedSource);
+                var formattedSource = renderedTree.GetRoot().NormalizeWhitespace().ToString();
+                context.AddSource(fileName, formattedSource);
+            }
+            else
+            {
+                context.AddSource(fileName, renderedSource);
+            }
 
 
             static string RemoveFirstAndLastLines(string str)
@@ -69,11 +82,6 @@ public class CommentRendererGenerator : IIncrementalGenerator
                 str = str.Remove(lastLineBreakIndex, str.Length - lastLineBreakIndex);
                 return str;
             }
-        });
-
-
-        context.RegisterSourceOutput(provider, static (context, arg) =>
-        {
         });
     }
 
