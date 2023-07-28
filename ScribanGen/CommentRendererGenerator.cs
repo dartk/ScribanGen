@@ -11,24 +11,27 @@ namespace ScribanGen;
 [Generator]
 public class CommentRendererGenerator : IIncrementalGenerator
 {
-    private const string ScribanRenderMultilineComments = nameof(ScribanRenderMultilineComments);
-
-
-    private const string ScribanRenderMultilineCommentsAttribute =
-        nameof(ScribanRenderMultilineCommentsAttribute);
+    private const string CommentStart = "/* Scriban";
+    private const string ScribanRenderComments = nameof(ScribanRenderComments);
+    private const string ScribanRenderCommentsAttribute = nameof(ScribanRenderCommentsAttribute);
 
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(static context =>
         {
-            context.AddSource($"{ScribanRenderMultilineCommentsAttribute}.g.cs",
+            context.AddSource($"{ScribanRenderCommentsAttribute}.g.cs",
                 $$"""
                 /// <summary>
-                /// Renders multiline comments as Scriban templates except first and last line.
+                /// Scriban renders multiline comments that start with 'SCRIBAN' (comparison is case insensitive)
+                /// <code>
+                /// /* SCRIBAN
+                /// ...
+                /// */
+                /// </code>
                 /// </summary>
                 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-                internal sealed class {{ScribanRenderMultilineCommentsAttribute}} : System.Attribute
+                internal sealed class {{ScribanRenderCommentsAttribute}} : System.Attribute
                 {
                 }
                 """);
@@ -38,21 +41,24 @@ public class CommentRendererGenerator : IIncrementalGenerator
 
         var triviaProvider = context.SyntaxProvider.CreateSyntaxProvider(
                 predicate: static (node, _) => node is AttributeSyntax attribute
-                    && attribute.Name.ExtractName() is ScribanRenderMultilineComments
-                        or ScribanRenderMultilineCommentsAttribute,
+                    && attribute.Name.ExtractName() is ScribanRenderComments
+                        or ScribanRenderCommentsAttribute,
                 transform: static (context, _) =>
                 {
                     var attributeNode = context.Node;
                     var typeNode = attributeNode.Parent?.Parent;
-                    if (typeNode is null) return ImmutableArray<SyntaxTrivia>.Empty;
+                    if (typeNode is null) return default;
 
-                    var triviaArray = typeNode.DescendantTrivia().Where(static t =>
-                            t.IsKind(SyntaxKind.MultiLineCommentTrivia))
+                    var triviaArray = typeNode.DescendantTrivia()
+                        .Where(static t => t.IsKind(SyntaxKind.MultiLineCommentTrivia))
+                        .Select(static t => (Trivia: t, Text: t.ToString()))
+                        .Where(static x =>
+                            x.Text.StartsWith(CommentStart, StringComparison.OrdinalIgnoreCase))
                         .ToImmutableArray();
 
                     return triviaArray;
                 })
-            .Where(static array => !array.IsEmpty);
+            .Where(static array => !array.IsDefaultOrEmpty);
 
         context.RegisterSourceOutput(triviaProvider.Combine(formatCodeProvider),
             static (context, arg) =>
@@ -60,19 +66,19 @@ public class CommentRendererGenerator : IIncrementalGenerator
                 var (triviaArray, formatCode) = arg;
                 var token = context.CancellationToken;
 
-                var changes = new List<TextChange>();
-                AddRemoveUnrelatedNodesChanges(changes, triviaArray);
-
-                var tree = triviaArray[0].SyntaxTree!;
+                var tree = triviaArray[0].Trivia.SyntaxTree!;
                 var filePath = tree.FilePath;
                 var source = tree.GetText();
 
-                foreach (var trivia in triviaArray)
+                var changes = new List<TextChange>();
+                AddRemoveUnrelatedNodesChanges(changes, tree, triviaArray.Select(x => x.Trivia));
+
+                foreach (var (trivia, text) in triviaArray)
                 {
                     token.ThrowIfCancellationRequested();
 
                     var lineOffset = source.Lines.GetLinePosition(trivia.SpanStart).Line;
-                    var templateText = RemoveCommentStartEndSymbols(trivia.ToString());
+                    var templateText = RemoveCommentStartEndSymbols(text);
                     var scribanFile = new ScribanFile(filePath, templateText, lineOffset);
                     var renderedText =
                         ScribanRenderer.Render(scribanFile, context.ReportDiagnostic);
@@ -98,7 +104,8 @@ public class CommentRendererGenerator : IIncrementalGenerator
 
                 static string RemoveCommentStartEndSymbols(string str)
                 {
-                    return str.Substring(2, str.Length - 4);
+                    return str.Substring(CommentStart.Length,
+                        str.Length - CommentStart.Length - 2);
                 }
             });
     }
@@ -117,8 +124,8 @@ public class CommentRendererGenerator : IIncrementalGenerator
     }
 
 
-    static void AddRemoveUnrelatedNodesChanges(List<TextChange> textChanges,
-        ImmutableArray<SyntaxTrivia> triviaArray)
+    static void AddRemoveUnrelatedNodesChanges(List<TextChange> textChanges, SyntaxTree tree,
+        IEnumerable<SyntaxTrivia> triviaArray)
     {
         void AddRemoveChange(TextSpan span)
         {
@@ -146,7 +153,6 @@ public class CommentRendererGenerator : IIncrementalGenerator
             }
         }
 
-        var tree = triviaArray[0].SyntaxTree!;
         var root = tree.GetRoot();
         protectedNodes.Add(root);
         AddRemoveUnprotectedNodesChanges(root);
