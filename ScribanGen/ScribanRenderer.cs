@@ -30,7 +30,7 @@ public class ScribanRenderer
                 ParserMessageType.Warning => TemplateWarning,
                 _ => throw new ArgumentOutOfRangeException()
             };
-            var location = ToLocation(scribanFile.FilePath, msg.Span);
+            var location = ToLocation(scribanFile.FilePath, msg.Span, scribanFile.LineOffset);
             var diagnostic = Diagnostic.Create(diagnosticType, location, msg.Message);
             reportDiagnostic(diagnostic);
         }

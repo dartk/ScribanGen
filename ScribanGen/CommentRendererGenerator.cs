@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using Scriban;
-using Scriban.Parsing;
 
 
 namespace ScribanGen;
@@ -12,77 +11,96 @@ namespace ScribanGen;
 [Generator]
 public class CommentRendererGenerator : IIncrementalGenerator
 {
-    private const string FirstLine = "/* ScribanGen render";
+    private const string ScribanRenderMultilineComments = nameof(ScribanRenderMultilineComments);
+
+
+    private const string ScribanRenderMultilineCommentsAttribute =
+        nameof(ScribanRenderMultilineCommentsAttribute);
 
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        context.RegisterPostInitializationOutput(static context =>
+        {
+            context.AddSource($"{ScribanRenderMultilineCommentsAttribute}.g.cs",
+                $$"""
+                /// <summary>
+                /// Renders multiline comments as Scriban templates except first and last line.
+                /// </summary>
+                [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+                internal sealed class {{ScribanRenderMultilineCommentsAttribute}} : System.Attribute
+                {
+                }
+                """);
+        });
+
         var formatCodeProvider = context.FormatCodeProvider();
 
         var triviaProvider = context.SyntaxProvider.CreateSyntaxProvider(
-                predicate: static (node, _) => node.IsKind(SyntaxKind.CompilationUnit),
+                predicate: static (node, _) => node is AttributeSyntax attribute
+                    && attribute.Name.ExtractName() is ScribanRenderMultilineComments
+                        or ScribanRenderMultilineCommentsAttribute,
                 transform: static (context, _) =>
                 {
-                    var node = context.Node;
-                    var triviaArray = node.DescendantTrivia().Where(static t =>
-                            t.IsKind(SyntaxKind.MultiLineCommentTrivia) &&
-                            t.ToString().StartsWith(FirstLine,
-                                StringComparison.InvariantCultureIgnoreCase))
+                    var attributeNode = context.Node;
+                    var typeNode = attributeNode.Parent?.Parent;
+                    if (typeNode is null) return ImmutableArray<SyntaxTrivia>.Empty;
+
+                    var triviaArray = typeNode.DescendantTrivia().Where(static t =>
+                            t.IsKind(SyntaxKind.MultiLineCommentTrivia))
                         .ToImmutableArray();
 
                     return triviaArray;
                 })
             .Where(static array => !array.IsEmpty);
 
-        context.RegisterSourceOutput(triviaProvider.Combine(formatCodeProvider), static (context, arg) =>
-        {
-            var (triviaArray, formatCode) = arg;
-            var token = context.CancellationToken;
-
-            var changes = new List<TextChange>();
-            AddRemoveUnrelatedNodesChanges(changes, triviaArray);
-
-            var tree = triviaArray[0].SyntaxTree!;
-            var filePath = tree.FilePath;
-            var source = tree.GetText();
-
-            foreach (var trivia in triviaArray)
+        context.RegisterSourceOutput(triviaProvider.Combine(formatCodeProvider),
+            static (context, arg) =>
             {
+                var (triviaArray, formatCode) = arg;
+                var token = context.CancellationToken;
+
+                var changes = new List<TextChange>();
+                AddRemoveUnrelatedNodesChanges(changes, triviaArray);
+
+                var tree = triviaArray[0].SyntaxTree!;
+                var filePath = tree.FilePath;
+                var source = tree.GetText();
+
+                foreach (var trivia in triviaArray)
+                {
+                    token.ThrowIfCancellationRequested();
+
+                    var lineOffset = source.Lines.GetLinePosition(trivia.SpanStart).Line;
+                    var templateText = RemoveCommentStartEndSymbols(trivia.ToString());
+                    var scribanFile = new ScribanFile(filePath, templateText, lineOffset);
+                    var renderedText =
+                        ScribanRenderer.Render(scribanFile, context.ReportDiagnostic);
+                    var change = new TextChange(trivia.Span, renderedText);
+                    changes.Add(change);
+                }
+
                 token.ThrowIfCancellationRequested();
+                var renderedSource = source.WithChanges(changes);
+                var fileName = Path.GetFileNameWithoutExtension(filePath) + ".g.cs";
 
-                var lineOffset = source.Lines.GetLinePosition(trivia.SpanStart).Line + 1;
-                var templateText = RemoveFirstAndLastLines(trivia.ToString());
-                var scribanFile = new ScribanFile(filePath, templateText, lineOffset);
-                var renderedText = ScribanRenderer.Render(scribanFile, context.ReportDiagnostic);
-                var change = new TextChange(trivia.Span, renderedText);
-                changes.Add(change);
-            }
-
-            token.ThrowIfCancellationRequested();
-            var renderedSource = source.WithChanges(changes);
-            var fileName = Path.GetFileNameWithoutExtension(filePath) + ".g.cs";
-
-            if (formatCode)
-            {
-                var renderedTree = CSharpSyntaxTree.ParseText(renderedSource);
-                var formattedSource = renderedTree.GetRoot().NormalizeWhitespace().ToString();
-                context.AddSource(fileName, formattedSource);
-            }
-            else
-            {
-                context.AddSource(fileName, renderedSource);
-            }
+                if (formatCode)
+                {
+                    var renderedTree = CSharpSyntaxTree.ParseText(renderedSource);
+                    var formattedSource = renderedTree.GetRoot().NormalizeWhitespace().ToString();
+                    context.AddSource(fileName, formattedSource);
+                }
+                else
+                {
+                    context.AddSource(fileName, renderedSource);
+                }
 
 
-            static string RemoveFirstAndLastLines(string str)
-            {
-                var firstLineBreakIndex = str.IndexOf('\n');
-                str = str.Remove(0, firstLineBreakIndex + 1);
-                var lastLineBreakIndex = str.LastIndexOf('\n');
-                str = str.Remove(lastLineBreakIndex, str.Length - lastLineBreakIndex);
-                return str;
-            }
-        });
+                static string RemoveCommentStartEndSymbols(string str)
+                {
+                    return str.Substring(2, str.Length - 4);
+                }
+            });
     }
 
 
@@ -113,14 +131,14 @@ public class CommentRendererGenerator : IIncrementalGenerator
         foreach (var trivia in triviaArray)
         {
             var node = trivia.Token.Parent!;
-            protectedNodes.Add(node);
 
             var parent = node.Parent;
             for (; parent is not null; node = parent, parent = node.Parent)
             {
                 foreach (var otherNode in parent.ChildNodes())
                 {
-                    if (ReferenceEquals(otherNode, node))
+                    if (ReferenceEquals(otherNode, node) && node is TypeDeclarationSyntax
+                        or NamespaceDeclarationSyntax or CompilationUnitSyntax)
                     {
                         protectedNodes.Add(otherNode);
                     }

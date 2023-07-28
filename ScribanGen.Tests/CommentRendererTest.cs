@@ -3,12 +3,18 @@
 
 public partial class CommentRendererTest
 {
+    [ScribanRenderMultilineComments]
+    private partial class Bar
+    {
+        /*
+        {{ for i in 0..10 }}
+        public static int I{{ i }} = {{ i }};
+        {{ end }}
+        */
+    }
 
-    /* ScribanGen render
 
-    {{ for i in 0..10 }}
-    public static int I{{ i }} = {{ i }};
-    {{ end }}
-
-    */
+    public void Foo()
+    {
+    }
 }
