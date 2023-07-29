@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 
 namespace ScribanGen;
@@ -41,12 +42,18 @@ public class ScribanIncrementalGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(filesToInclude, static (productionContext, scriban) =>
             ScribanRenderer.Parse(scriban, productionContext.ReportDiagnostic));
 
-        context.RegisterSourceOutput(filesWithDependencies, static (productionContext, scriban) =>
-            RenderScribanTemplate(productionContext, scriban.template));
+        var formatCodeProvider = context.FormatCodeProvider();
+        context.RegisterSourceOutput(filesWithDependencies.Combine(formatCodeProvider),
+            static (productionContext, arg) =>
+            {
+                var (file, formatCode) = arg;
+                RenderScribanTemplate(productionContext, file.template, formatCode);
+            });
     }
 
 
-    private static void RenderScribanTemplate(SourceProductionContext context, ScribanFile template)
+    private static void RenderScribanTemplate(SourceProductionContext context, ScribanFile template,
+        bool formatCode)
     {
         var token = context.CancellationToken;
 
@@ -66,6 +73,12 @@ public class ScribanIncrementalGenerator : IIncrementalGenerator
             source;
 
         var generatedFileName = Path.GetFileNameWithoutExtension(template.FilePath);
+        if (formatCode)
+        {
+            var tree = CSharpSyntaxTree.ParseText(source);
+            source = tree.GetRoot().NormalizeWhitespace().ToString();
+        }
+
         context.AddSource(generatedFileName + ".g.cs", source);
     }
 
