@@ -9,7 +9,7 @@ namespace ScribanGen;
 
 
 [Generator]
-public class CommentRendererGenerator : IIncrementalGenerator
+public class MultilineCommentGenerator : IIncrementalGenerator
 {
     private const string CommentStart = "/* Scriban render";
 

@@ -7,7 +7,7 @@ namespace ScribanGen;
 
 
 [Generator(LanguageNames.CSharp)]
-public class ScribanIncrementalGenerator : IIncrementalGenerator
+public class AdditionalFileGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
