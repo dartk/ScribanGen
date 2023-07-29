@@ -1,10 +1,9 @@
 ﻿namespace ScribanGen.Tests;
 
 
-[ScribanRenderComments]
 public partial class CommentRendererTest
 {
-    /* SCRIBAN
+    /* Scriban render
 
     {{ for i in 0..10 }}
     public static int I{{ i }} = {{ i }};
@@ -12,3 +11,10 @@ public partial class CommentRendererTest
 
     */
 }
+
+
+/* Scriban render
+public class MyGeneratedClass
+{
+}
+*/

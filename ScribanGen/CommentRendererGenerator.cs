@@ -11,45 +11,19 @@ namespace ScribanGen;
 [Generator]
 public class CommentRendererGenerator : IIncrementalGenerator
 {
-    private const string CommentStart = "/* Scriban";
-    private const string ScribanRenderComments = nameof(ScribanRenderComments);
-    private const string ScribanRenderCommentsAttribute = nameof(ScribanRenderCommentsAttribute);
+    private const string CommentStart = "/* Scriban render";
 
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterPostInitializationOutput(static context =>
-        {
-            context.AddSource($"{ScribanRenderCommentsAttribute}.g.cs",
-                $$"""
-                /// <summary>
-                /// Scriban renders multiline comments that start with 'SCRIBAN' (comparison is case insensitive)
-                /// <code>
-                /// /* SCRIBAN
-                /// ...
-                /// */
-                /// </code>
-                /// </summary>
-                [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-                internal sealed class {{ScribanRenderCommentsAttribute}} : System.Attribute
-                {
-                }
-                """);
-        });
-
         var formatCodeProvider = context.FormatCodeProvider();
 
         var triviaProvider = context.SyntaxProvider.CreateSyntaxProvider(
-                predicate: static (node, _) => node is AttributeSyntax attribute
-                    && attribute.Name.ExtractName() is ScribanRenderComments
-                        or ScribanRenderCommentsAttribute,
+                predicate: static (node, _) => node.IsKind(SyntaxKind.CompilationUnit),
                 transform: static (context, _) =>
                 {
-                    var attributeNode = context.Node;
-                    var typeNode = attributeNode.Parent?.Parent;
-                    if (typeNode is null) return default;
-
-                    var triviaArray = typeNode.DescendantTrivia()
+                    var compilationUnit = context.Node;
+                    var triviaArray = compilationUnit.DescendantTrivia()
                         .Where(static t => t.IsKind(SyntaxKind.MultiLineCommentTrivia))
                         .Select(static t => (Trivia: t, Text: t.ToString()))
                         .Where(static x =>
